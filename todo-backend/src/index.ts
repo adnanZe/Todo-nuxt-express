@@ -12,6 +12,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
+app.get('/', (_req, res) => {
+    res.send('Hello World!');
+});
+
 app.post('/api/auth/login', loginUser);
 
 app.get('/api/tasks', authenticateToken, tasksModule.getTasks);
