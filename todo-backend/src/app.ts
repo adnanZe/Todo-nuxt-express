@@ -1,7 +1,9 @@
+// src/app.ts
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import { getTasks, createTask, updateTask, deleteTask } from './tasks';
+import taskRoutes from './routes/task';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,10 +17,7 @@ app.get('/', (_req, res) => {
     res.send('ToDo Express');
 });
 
-app.get('/api/tasks', getTasks);
-app.post('/api/tasks', createTask);
-app.put('/api/tasks/:id', updateTask);
-app.delete('/api/tasks/:id', deleteTask);
+app.use('/api/tasks', taskRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
