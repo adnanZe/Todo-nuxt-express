@@ -2,8 +2,6 @@ import { Request, Response } from 'express';
 import Task from '../models/task';
 import * as taskService from '../services/task';
 
-
-
 export const getTasks = (_req: Request, res: Response) => {
     const tasks = taskService.getTasks();
     res.json(tasks);
