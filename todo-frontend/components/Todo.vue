@@ -9,7 +9,7 @@
       <button @click="addTodo">Add</button>
     </div>
     <ul class="todo-list">
-      <li v-for="(todo, index) in store.getTodos" :key="index">
+      <li v-for="(todo, index) in todos" :key="index">
         <span>{{ todo.title }}</span>
         <button @click="removeTodo(index)">Delete</button>
       </li>
@@ -18,17 +18,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useTodoStore } from "../store/index";
 import type Task from "../models/Task";
 
-interface ResponseTask {
-  data: Task;
-}
-
 const store = useTodoStore();
 const newTodo = ref("");
+const todos = ref<Task[]>([]);
+
+const fetchTodos = async () => {
+  try {
+    const response = await axios.get<Task[]>("http://localhost:3001/api/tasks");
+    console.log("Todos fetched:", response.data);
+
+    store.setTodos(response.data);
+    todos.value = store.getTodos;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("error message: ", error.message);
+      return error.message;
+    } else {
+      console.log("unexpected error: ", error);
+      return "An unexpected error occurred";
+    }
+  }
+};
+
+onMounted(() => {
+  fetchTodos();
+});
 
 const addTodo = async () => {
   if (newTodo.value.trim() === "") return;
@@ -56,6 +75,12 @@ const addTodo = async () => {
 const removeTodo = (index: number) => {
   store.removeTodo(index);
 };
+
+store.$subscribe(({ storeName, event }: any) => {
+  if (storeName === "todo" && (event === "addTodo" || event === "removeTodo")) {
+    todos.value = store.getTodos;
+  }
+});
 </script>
 
 <style scoped>

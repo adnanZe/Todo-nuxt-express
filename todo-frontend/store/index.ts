@@ -13,6 +13,9 @@ export const useTodoStore = defineStore({
         removeTodo(index: number) {
             this.todos.splice(index, 1);
         },
+        setTodos(todos: Task[]) {
+            this.todos = todos;
+        }
     },
     getters: {
         getTodos: (state) => state.todos
