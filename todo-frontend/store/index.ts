@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
+import type Task from "../models/Task"
 
 export const useTodoStore = defineStore({
     id: 'todo',
     state: () => ({
-        todos: [] as string[],
+        todos: [] as Task[],
     }),
     actions: {
-        addTodo(todo: string) {
+        addTodo(todo: Task) {
             this.todos.push(todo);
         },
         removeTodo(index: number) {

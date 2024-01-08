@@ -10,7 +10,7 @@
     </div>
     <ul class="todo-list">
       <li v-for="(todo, index) in store.getTodos" :key="index">
-        <span>{{ todo }}</span>
+        <span>{{ todo.title }}</span>
         <button @click="removeTodo(index)">Delete</button>
       </li>
     </ul>
@@ -19,16 +19,38 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import axios from "axios";
 import { useTodoStore } from "../store/index";
+import type Task from "../models/Task";
+
+interface ResponseTask {
+  data: Task;
+}
 
 const store = useTodoStore();
 const newTodo = ref("");
 
-const addTodo = () => {
+const addTodo = async () => {
   if (newTodo.value.trim() === "") return;
 
-  store.addTodo(newTodo.value);
-  newTodo.value = "";
+  try {
+    const response = await axios.post<Task>("http://localhost:3001/api/tasks", {
+      title: newTodo.value,
+      completed: false,
+    });
+    console.log("Todo added:", response.data);
+
+    store.addTodo(response.data);
+    newTodo.value = "";
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.log("error message: ", error.message);
+      return error.message;
+    } else {
+      console.log("unexpected error: ", error);
+      return "An unexpected error occurred";
+    }
+  }
 };
 
 const removeTodo = (index: number) => {
