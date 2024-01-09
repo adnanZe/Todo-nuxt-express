@@ -16,17 +16,21 @@ export const useTodoStore = defineStore({
                 console.error('Error fetching todos:', error);
             }
         },
-        async addTodo(todo: Task) {
+        async addTodo({ title }: { title: string }) {
             try {
-                const response = await axios.post<Task>("http://localhost:3001/api/tasks", todo);
+                const response = await axios.post<Task>("http://localhost:3001/api/tasks", title);
                 this.todos.push(response.data);
             } catch (error) {
                 console.error('Error adding todo:', error);
             }
         },
-        removeTodo(index: number) {
+        async removeTodo(id: number) {
             try {
-                this.todos.splice(index, 1);
+                const response = await axios.delete(`http://localhost:3001/api/tasks/${id}`);
+                if (response.status === 204) {
+                    this.todos = this.todos.filter((todo) => todo.id !== id);
+                }
+
             } catch (error) {
                 console.error('Error removing todo:', error);
             }

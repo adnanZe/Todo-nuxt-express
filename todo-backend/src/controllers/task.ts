@@ -8,7 +8,7 @@ export const getTasks = (_req: Request, res: Response) => {
 };
 
 export const createTask = (req: Request & { user?: { id: string } }, res: Response) => {
-    const newTask: Task = { ...req.body, id: taskService.getNextTaskId(), userId: req.user?.id };
+    const newTask: Task = { ...req.body, id: taskService.getNextTaskId(), userId: req.user?.id, completed: false };
     const createdTask = taskService.createTask(newTask);
     res.json(createdTask);
 };

@@ -11,7 +11,8 @@
     <ul class="todo-list">
       <li v-for="(todo, index) in store.getTodos" :key="index">
         <span>{{ todo.title }}</span>
-        <button @click="removeTodo(index)">Delete</button>
+        <button @click="editTodo(todo.id)" class="edit-btn">Edit</button>
+        <button @click="removeTodo(todo.id)">Delete</button>
       </li>
     </ul>
   </div>
@@ -30,12 +31,11 @@ onMounted(() => {
 
 const addTodo = async () => {
   if (newTodo.value.trim() === "") return;
-  await store.addTodo({
-    title: newTodo.value,
-    completed: false,
-  });
+  await store.addTodo({ title: newTodo.value });
   newTodo.value = "";
 };
+
+const editTodo = (index: number) => {};
 
 const removeTodo = (index: number) => {
   store.removeTodo(index);
@@ -102,5 +102,10 @@ const removeTodo = (index: number) => {
   padding: 8px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.todo-list li button.edit-btn {
+  background-color: #3498db;
+  margin-right: 0.5rem;
 }
 </style>
