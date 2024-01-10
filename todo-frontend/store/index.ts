@@ -6,6 +6,7 @@ export const useTodoStore = defineStore({
     id: 'todo',
     state: () => ({
         todos: [] as Task[],
+        editingTodo: null as Task | null,
     }),
     actions: {
         async fetchTodos() {
@@ -16,9 +17,9 @@ export const useTodoStore = defineStore({
                 console.error('Error fetching todos:', error);
             }
         },
-        async addTodo({ title }: { title: string }) {
+        async addTodo(todo: Partial<Task>) {
             try {
-                const response = await axios.post<Task>("http://localhost:3001/api/tasks", title);
+                const response = await axios.post<Task>("http://localhost:3001/api/tasks", todo);
                 this.todos.push(response.data);
             } catch (error) {
                 console.error('Error adding todo:', error);
@@ -34,6 +35,24 @@ export const useTodoStore = defineStore({
             } catch (error) {
                 console.error('Error removing todo:', error);
             }
+        },
+
+        async updateTodo(todo: Task) {
+            try {
+                const response = await axios.put(`http://localhost:3001/api/tasks/${todo.id}`, todo);
+                const updatedTodo = response.data;
+                const index = this.todos.findIndex(t => t.id === updatedTodo.id);
+                if (index !== -1) {
+                    this.todos[index] = updatedTodo;
+                }
+                this.editingTodo = null;
+
+            } catch (error) {
+                console.error('Error updating todo:', error);
+            }
+        },
+        setEditingTodo(todo: Task) {
+            this.editingTodo = todo;
         },
         setTodos(todos: Task[]) {
             try {

@@ -10,8 +10,14 @@
     </div>
     <ul class="todo-list">
       <li v-for="(todo, index) in store.getTodos" :key="index">
-        <span>{{ todo.title }}</span>
-        <button @click="editTodo(todo.id)" class="edit-btn">Edit</button>
+        <span v-if="store.editingTodo !== todo">{{ todo.title }}</span>
+        <input
+          v-else
+          v-model="store.editingTodo.title"
+          @keyup.enter="store.updateTodo(store.editingTodo)" />
+        <button @click="store.setEditingTodo(todo)" class="edit-btn">
+          Edit
+        </button>
         <button @click="removeTodo(todo.id)">Delete</button>
       </li>
     </ul>
@@ -34,8 +40,6 @@ const addTodo = async () => {
   await store.addTodo({ title: newTodo.value });
   newTodo.value = "";
 };
-
-const editTodo = (index: number) => {};
 
 const removeTodo = (index: number) => {
   store.removeTodo(index);
