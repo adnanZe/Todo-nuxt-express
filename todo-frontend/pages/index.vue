@@ -1,5 +1,11 @@
-<template>
-  <div>
-    <h1>Welcome to Nuxt 3</h1>
-  </div>
-</template>
+<template></template>
+<script lang="ts" setup>
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+onMounted(() => {
+  router.push("/todo");
+});
+</script>
