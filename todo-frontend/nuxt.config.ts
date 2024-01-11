@@ -10,4 +10,5 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
   ],
+  pages: true
 })
