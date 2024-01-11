@@ -5,6 +5,8 @@ interface RequestWithUser extends Request {
     userId?: string;
 }
 
+const test = "test";
+
 export const verifyToken = (req: RequestWithUser, res: Response, next: NextFunction) => {
     const token = req.headers['x-access-token'];
     if (!token) {
