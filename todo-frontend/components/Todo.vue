@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useTodoStore } from "../store/index";
+import { useTodoStore } from "../store/todo";
 
 const store = useTodoStore();
 const newTodo = ref("");
